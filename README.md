@@ -5,12 +5,14 @@ A full-stack CRUD application for managing employee biodata with role-based auth
 ## 🚀 Tech Stack
 
 **Backend:**
+
 - Node.js + Express.js
 - MySQL Database
 - JWT Authentication
 - bcryptjs for password hashing
 
 **Frontend:**
+
 - React.js
 - React Bootstrap
 - Axios for API calls
@@ -19,23 +21,27 @@ A full-stack CRUD application for managing employee biodata with role-based auth
 ## � Features
 
 ### Authentication System
+
 - User registration and login
 - Role-based access control (Admin & User)
 - JWT token authentication
 
 ### User Features
+
 - Create personal biodata
 - Edit own biodata
 - Delete own biodata
 - View personal biodata list
 
 ### Admin Features
+
 - View all employee biodata
 - Edit any employee biodata
 - Delete any employee biodata
 - Full CRUD operations on all data
 
 ### Biodata Management
+
 - Personal information (Name, ID Card, Birth details, etc.)
 - Contact information
 - Education history
@@ -46,17 +52,20 @@ A full-stack CRUD application for managing employee biodata with role-based auth
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - MySQL Server
 - Git
 
 ### Backend Setup
+
 ```bash
 cd backend
 npm install
 ```
 
 Create `.env` file in backend folder:
+
 ```
 DB_HOST=localhost
 DB_USER=root
@@ -67,6 +76,7 @@ PORT=5000
 ```
 
 Start backend server:
+
 ```bash
 cd backend
 npm start
@@ -74,6 +84,7 @@ npm start
 ```
 
 ### Frontend Setup
+
 ```bash
 cd frontend
 npm install
@@ -82,9 +93,11 @@ npm start
 ```
 
 ### Database Setup
+
 The application will automatically create the required tables when you first run the backend server.
 
 **Admin Account:**
+
 - Email: `admin@admin.com`
 - Password: `admin123`
 
@@ -100,7 +113,7 @@ The application will automatically create the required tables when you first run
 - `users` - User accounts with roles
 - `biodata` - Main employee information
 - `education` - Education history
-- `training` - Training/course records  
+- `training` - Training/course records
 - `work_experience` - Work experience records
 
 ## 🔐 Security Features
@@ -113,16 +126,19 @@ The application will automatically create the required tables when you first run
 ## 🌐 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 
 ### Biodata (User)
+
 - `GET /api/biodata` - Get user's biodata
 - `POST /api/biodata` - Create biodata
 - `PUT /api/biodata/:id` - Update own biodata
 - `DELETE /api/biodata/:id` - Delete own biodata
 
 ### Admin Endpoints
+
 - `GET /api/admin/biodata` - Get all biodata
 - `GET /api/admin/biodata/:id` - Get specific biodata
 - `PUT /api/admin/biodata/:id` - Update any biodata
@@ -137,17 +153,19 @@ This project is for educational purposes.
 Developed by Yehezkiel Imannuel
 
 ---
-*Simple and efficient employee biodata management system with role-based access control.*
-│   ├── .env               # Environment variables
-│   └── package.json       # Backend dependencies
-├── frontend/              # React.js Application
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── contexts/      # React contexts
-│   │   └── App.js        # Main App component
-│   └── package.json      # Frontend dependencies
+
+_Simple and efficient employee biodata management system with role-based access control._
+│ ├── .env # Environment variables
+│ └── package.json # Backend dependencies
+├── frontend/ # React.js Application
+│ ├── src/
+│ │ ├── components/ # React components
+│ │ ├── contexts/ # React contexts
+│ │ └── App.js # Main App component
+│ └── package.json # Frontend dependencies
 └── README.md
-```
+
+````
 
 ## 🛠️ Teknologi yang Digunakan
 
@@ -186,7 +204,7 @@ Developed by Yehezkiel Imannuel
 ```bash
 git clone <repository-url>
 cd mockup-application
-```
+````
 
 ### 2. Setup Database MySQL
 

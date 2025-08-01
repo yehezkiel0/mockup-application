@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Table, Button, Alert, Badge, Modal } from "react-bootstrap";
-import { FaEdit, FaTrash, FaEye, FaPlus } from "react-icons/fa";
+import { Card, Table, Button, Alert, Badge, Modal, Form, Row, Col } from "react-bootstrap";
+import { FaEdit, FaTrash, FaEye, FaPlus, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
@@ -9,16 +9,48 @@ const BiodataList = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [biodataList, setBiodataList] = useState([]);
+  const [filteredBiodataList, setFilteredBiodataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedBiodata, setSelectedBiodata] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  
+  // Search states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchBy, setSearchBy] = useState("nama"); // nama, posisi, pendidikan
 
   useEffect(() => {
     fetchBiodata();
   }, [user.role]);
+
+  // Filter biodata based on search
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredBiodataList(biodataList);
+    } else {
+      const filtered = biodataList.filter((biodata) => {
+        const searchValue = searchTerm.toLowerCase();
+        
+        switch (searchBy) {
+          case "nama":
+            return biodata.nama?.toLowerCase().includes(searchValue);
+          case "posisi":
+            return biodata.posisi?.toLowerCase().includes(searchValue);
+          case "pendidikan":
+            // Search in education field (format: "jenjang|institusi|jurusan|tahun|ipk")
+            if (biodata.education) {
+              return biodata.education.toLowerCase().includes(searchValue);
+            }
+            return false;
+          default:
+            return biodata.nama?.toLowerCase().includes(searchValue);
+        }
+      });
+      setFilteredBiodataList(filtered);
+    }
+  }, [biodataList, searchTerm, searchBy]);
 
   const fetchBiodata = async () => {
     try {
@@ -28,6 +60,7 @@ const BiodataList = () => {
           : "http://localhost:5000/api/biodata";
       const response = await axios.get(endpoint);
       setBiodataList(response.data);
+      setFilteredBiodataList(response.data); // Initialize filtered list
       setError("");
     } catch (error) {
       setError("Error loading biodata");
@@ -128,16 +161,70 @@ const BiodataList = () => {
 
       {error && <Alert variant="danger">{error}</Alert>}
 
+      {/* Search Form - Only for Admin */}
+      {user.role === "admin" && (
+        <Card className="mb-3">
+          <Card.Body>
+            <Row>
+              <Col md={4}>
+                <Form.Group>
+                  <Form.Label>Cari Berdasarkan:</Form.Label>
+                  <Form.Select 
+                    value={searchBy} 
+                    onChange={(e) => setSearchBy(e.target.value)}
+                  >
+                    <option value="nama">Nama</option>
+                    <option value="posisi">Posisi yang Dilamar</option>
+                    <option value="pendidikan">Tingkat Pendidikan Terakhir</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Kata Kunci Pencarian:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder={`Masukkan ${searchBy === 'nama' ? 'nama' : searchBy === 'posisi' ? 'posisi yang dilamar' : 'tingkat pendidikan'} yang dicari...`}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={2} className="d-flex align-items-end">
+                <Button 
+                  variant="outline-secondary"
+                  onClick={() => setSearchTerm("")}
+                  disabled={!searchTerm}
+                >
+                  Reset
+                </Button>
+              </Col>
+            </Row>
+            {searchTerm && (
+              <div className="mt-2">
+                <small className="text-muted">
+                  Menampilkan {filteredBiodataList.length} dari {biodataList.length} data 
+                  untuk pencarian "{searchTerm}" pada {searchBy === 'nama' ? 'nama' : searchBy === 'posisi' ? 'posisi yang dilamar' : 'tingkat pendidikan terakhir'}
+                </small>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+      )}
+
       <Card>
         <Card.Body>
-          {biodataList.length === 0 ? (
+          {filteredBiodataList.length === 0 ? (
             <div className="text-center py-4">
               <p>
-                {user.role === "admin"
+                {searchTerm 
+                  ? `Tidak ada data yang ditemukan untuk pencarian "${searchTerm}"`
+                  : user.role === "admin"
                   ? "Belum ada data biodata dari user."
-                  : "Belum ada data biodata."}
+                  : "Belum ada data biodata."
+                }
               </p>
-              {user.role !== "admin" && (
+              {user.role !== "admin" && !searchTerm && (
                 <Button
                   variant="primary"
                   onClick={() => navigate("/biodata/new")}
@@ -162,7 +249,7 @@ const BiodataList = () => {
                 </tr>
               </thead>
               <tbody>
-                {biodataList.map((biodata, index) => (
+                {filteredBiodataList.map((biodata, index) => (
                   <tr key={biodata.id}>
                     <td>{index + 1}</td>
                     <td>{biodata.nama}</td>
