@@ -1,3 +1,14 @@
+# GitHub specific files (exclude from repo)
+.github/
+
+# Summary and documentation files (exclude)
+FIXES_SUMMARY.md
+*_SUMMARY.md
+*_UPDATE.md
+*_FIX*.md
+DEBUG_*.md
+RBAC_*.md
+
 # Dependencies
 node_modules/
 /frontend/node_modules/
